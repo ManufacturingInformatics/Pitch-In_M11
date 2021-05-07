@@ -1,5 +1,4 @@
 01[[:space:]]Input/from[[:space:]]UoS/Presentations/Pitch-In[[:space:]]Workshop[[:space:]]Cambridge[[:space:]]2019.pptx filter=lfs diff=lfs merge=lfs -text
-03[[:space:]]Scripts/RaspberryPiThermalCamera/ProcessData/*.hdf5 filter=lfs diff=lfs merge=lfs -text
 03[[:space:]]Scripts/ThermalTexture/*.7z filter=lfs diff=lfs merge=lfs -text
 03[[:space:]]Scripts/ThermalTexture/*.mp4 filter=lfs diff=lfs merge=lfs -text
 03[[:space:]]Scripts/ThermalTexture/*.gif filter=lfs diff=lfs merge=lfs -text
@@ -19,4 +18,3 @@
 03[[:space:]]Scripts/CXDGuiViewer/*.gif filter=lfs diff=lfs merge=lfs -text
 03[[:space:]]Scripts/RaspberryPiThermalCamera/ProcessData/contourPicsOnly.7z filter=lfs diff=lfs merge=lfs -text
 03[[:space:]]Scripts/ScraperRPM/Animations/*.gif filter=lfs diff=lfs merge=lfs -text
-03[[:space:]]Scripts/PowderSegmentation/Scripts/*.hdf5 filter=lfs diff=lfs merge=lfs -text
