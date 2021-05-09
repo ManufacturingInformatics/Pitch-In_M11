@@ -17,3 +17,5 @@
 03[[:space:]]Scripts/CXDGuiViewer/*.gif filter=lfs diff=lfs merge=lfs -text
 03[[:space:]]Scripts/RaspberryPiThermalCamera/ProcessData/contourPicsOnly.7z filter=lfs diff=lfs merge=lfs -text
 03[[:space:]]Scripts/ScraperRPM/Animations/*.gif filter=lfs diff=lfs merge=lfs -text
+03[[:space:]]Scripts/3D[[:space:]]Thermal[[:space:]]Reconstruction/Animations/*.mp4 filter=lfs diff=lfs merge=lfs -text
+03[[:space:]]Scripts/3D[[:space:]]Thermal[[:space:]]Reconstruction/Animations/*.gif filter=lfs diff=lfs merge=lfs -text
