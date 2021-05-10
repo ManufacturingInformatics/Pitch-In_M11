@@ -1,0 +1,303 @@
+;------------------------------------------------------
+;Making a upsidedown tree.
+;
+; Start the program at max X and min Y co-ordinates.
+;------------------------------------------------------
+
+;
+; Variable definitions.
+;
+DEF BOOL bBuildPart = 1					; Set to 0 for a dry run and set to 1 to activate the laser and powder.
+DEF BOOL bAlternateStartCorner = 0		; Set to 1 to alternate between starting at the back left and back right corners.
+DEF BOOL bMovePositive					; Indicates whether the next long meander is in the positive x direction (left).
+
+DEF REAL rLayerThickness = 0.22			; The layer thickness.
+DEF REAL rBeadWidth = 0.3				; The hatch spacing.
+DEF REAL rHeight = 4.5					; The wall height.
+DEF INT iTotalLayers					; The number of layers to build with main power.
+
+DEF REAL rMaxTriangleWidth = 20.0		; The maximum triangle width
+DEF REAL rTriangleWidth					; Current width of the triangle
+DEF REAL rTriangleWidthOriginal = 20.0	; Width of the triangle at the start
+DEF REAL rTriangleLength = 18.0			; The length of the triangle
+DEF INT iTriLinesRequired				; The number of side-by-side beads required to make the required height of triangle.
+DEF REAL rWidthDecrease					; The amount by which width decreases per layer - changed with each hatch
+
+DEF REAL rRectWidth = 3.0				; The width of the rectangles
+DEF REAL rRectLength = 10.0				; The length of the rectangles
+DEF INT iLHLinesRequired				; The number of side-by-side beads required to make the left hand rectangle.
+DEF INT iRHLinesRequired				; The number of side-by-side beads required to make the right hand rectangle.
+
+
+DEF REAL rInitialPower = 45.0			; The laser power in % for the initial layers.
+DEF REAL rMainPower						; The laser power in % for the main layers.
+
+DEF INT iFeedRate = 2400				; FeedRate
+DEF INT iMassFlow = 10.0				; Turntable speed
+
+DEF INT iCountLayer						; A counter for the current layer.
+DEF INT iCountLine						; A counter for the current line.
+
+DEF REAL rXOffset						; The X offset from G54 for the start position.
+DEF REAL rYOffset						; The Y offset from G54 for the start position.
+
+iTotalLayers = TRUNC(rHeight / rLayerThickness)
+iTriLinesRequired = TRUNC(rTriangleLength / rBeadWidth)
+rWidthDecrease = (rMaxTriangleWidth - 0.1) / iTriLinesRequired
+iLHLinesRequired = TRUNC(rRectWidth / rBeadWidth)
+iRHLinesRequired = TRUNC(rRectLength / rBeadWidth)
+
+;------------------------------------------------------
+;
+; Common startup.
+;
+;------------------------------------------------------
+
+;
+; Laser parameters.
+;
+MODE_LASER 1							; Adjust laser  power with speed.
+PUIS_LASER rInitialPower				; The requested laser power in %.
+VIT_TIR = iFeedRate						; The feed rate: this is used for the laser power adjustment.
+COMMANDE_LASER							; Send the updated commands to the laser unit.
+
+;
+; Gas parameters.
+;
+H61=3									; Central gas flow rate.
+H62=6									; Secondary gas flow rate.
+
+;
+; Powder parameters.
+;
+H21=3									; Select hopper for channel 3
+H22=0
+H23=0
+H31=30									; Set channel 1 carrier gas flow rate.
+H41=15									; Set channel 1 stirrer speed.
+H51=iMassFlow							; Set channel 1 turntable speed.
+
+;
+; Turn-on the powder and gases.
+;
+IF (bBuildPart == 1)
+	M180								; Turn-on central gas.
+	M182								; Turn-on secondary gas.
+	M160								; Turn-on powder channel 1 (as defined by H21).
+ENDIF
+
+; Define the start position of the triangle
+rXOffset = 6.0
+rYOffset = 10.0
+
+;
+; Build the initial layers.
+;
+G90										; Use absolute co-ordinates.
+G54										; Select work piece co-ordinate system G54.
+G00	Z=rHeight							; Move to a safe height.
+G00 X=rXOffset Y=rYOffset				; Rapid move to above start position.
+G01 Z0 F=iFeedRate						; Move to the working distance.
+G91										; Use relative co-ordinates.
+IF (bBuildPart == 1)
+	G04 F15								; Wait for 15s.
+ENDIF
+
+PUIS_LASER rInitialPower				; The requested laser power in %.
+COMMANDE_LASER							; Send the updated commands to the laser unit.
+
+iCountLayer = 1
+WHILE (iCountLayer <= iTotalLayers)
+	G90													; Use absolute co-ordinates.
+	G00 X=rXOffset Y=rYOffset							; Start at the back left corner.
+	G91													; Use relative co-ordinates.	; Always start in the back left corner.
+	
+	IF (bBuildPart == 1)
+			M110											; Turn-on laser.
+	ENDIF
+	
+	;
+	; Deposit the tree.
+	;
+	iCountLine = 1
+	bMovePositive = 0
+	rTriangleWidth = rTriangleWidthOriginal
+	WHILE (iCountLine <= iTriLinesRequired)
+		
+		IF (bMovePositive == 0)
+			G01 X=-(rTriangleWidth) Y0 Z0 F=iFeedRate			; Linear interpolation.
+			bMovePositive = 1
+		ELSE
+			G01 X=(rTriangleWidth) Y0 Z0 F=iFeedRate			; Linear interpolation.
+			bMovePositive = 0
+		ENDIF
+		
+		; Move over to the next line, except if the current line is the last of the current layer.
+		IF (iCountLine < iTriLinesRequired)
+			IF (bMovePositive == 1)
+				G01 X=rWidthDecrease/2 Y=rBeadWidth Z0 F=iFeedRate						; Move to the next line.
+			ELSE
+				G01 X=-rWidthDecrease/2 Y=rBeadWidth Z0 F=iFeedRate						; Move to the next line.
+			ENDIF
+		ENDIF
+		
+		rTriangleWidth = rTriangleWidth - rWidthDecrease			; Calculate length of next hatch
+		iCountLine = iCountLine + 1									; Increment the line counter.
+	ENDWHILE
+	
+	IF (bBuildPart == 1)
+			M111													; Turn-off laser.
+	ENDIF
+	
+	;
+	; Deposit the LH rectangle.
+	;
+	G90													; Use absolute co-ordinates.
+	G00 X=2.0 Y=10										; Start at the front left corner.
+	G91													; Use relative co-ordinates.
+	
+	IF (bBuildPart == 1)
+		;G04 F15											;
+		M110											; Turn-on laser.
+	ENDIF
+	
+	iCountLine = 1
+	bMovePositive = 0
+	WHILE (iCountLine <= iLHLinesRequired)
+		
+		IF (bMovePositive == 0)
+			G01 X0 Y=-rRectLength Z0 F=iFeedRate			; Linear interpolation.
+			bMovePositive = 1
+		ELSE
+			G01 X0 Y=rRectLength Z0 F=iFeedRate			; Linear interpolation.
+			bMovePositive = 0
+		ENDIF
+		
+		; Move over to the next line, except if the current line is the last of the current layer.
+		IF (iCountLine < iLHLinesRequired)
+			G01 X=-rBeadWidth Y0 Z0 F=iFeedRate						; Move to the next line.
+		ENDIF
+		
+		iCountLine = iCountLine + 1									; Increment the line counter.
+	ENDWHILE
+	
+	IF (bBuildPart == 1)
+			M111													; Turn-off laser.
+	ENDIF
+	
+	;
+	; Deposit the central rectangle.
+	;
+	G90													; Use absolute co-ordinates.
+	G00 X=-2.5 Y=10										; Start at the front left corner.
+	G91													; Use relative co-ordinates.
+	
+	IF (bBuildPart == 1)
+		;G04 F30											; Wait for 30s if building
+		M110											; Turn-on laser.
+	ENDIF
+	
+	iCountLine = 1
+	bMovePositive = 0
+	IF ((iCountLayer MOD 2) == 1)						; Odd layers.
+		WHILE (iCountLine <= iLHLinesRequired)			; Long stripes
+			
+			IF (bMovePositive == 0)
+				G01 X0 Y=-rRectLength Z0 F=iFeedRate			; Linear interpolation.
+				bMovePositive = 1
+			ELSE
+				G01 X0 Y=rRectLength Z0 F=iFeedRate			; Linear interpolation.
+				bMovePositive = 0
+			ENDIF
+			
+			; Move over to the next line, except if the current line is the last of the current layer.
+			IF (iCountLine < iLHLinesRequired)
+				G01 X=-rBeadWidth Y0 Z0 F=iFeedRate						; Move to the next line.
+			ENDIF
+			
+			iCountLine = iCountLine + 1									; Increment the line counter.
+		ENDWHILE
+	ELSE							;Even Layers
+		WHILE (iCountLine <= iRHLinesRequired)			;Short Stripes
+			IF (bMovePositive == 0)
+				G01 X=-rRectWidth Y0 Z0 F=iFeedRate			; Linear interpolation.
+				bMovePositive = 1
+			ELSE
+				G01 X=rRectWidth Y0 Z0 F=iFeedRate			; Linear interpolation.
+				bMovePositive = 0
+			ENDIF
+			
+			; Move over to the next line, except if the current line is the last of the current layer.
+			IF (iCountLine < iRHLinesRequired)
+				G01 X0 Y=-rBeadWidth Z0 F=iFeedRate						; Move to the next line.
+			ENDIF
+			
+			iCountLine = iCountLine + 1									; Increment the line counter.
+		ENDWHILE
+	ENDIF
+	
+	IF (bBuildPart == 1)
+			M111													; Turn-off laser.
+	ENDIF
+	
+	;
+	; Deposit the RH rectangle.
+	;
+	G90													; Use absolute co-ordinates.
+	G00 X=-7.0 Y=10										; Start at the front left corner.
+	G91													; Use relative co-ordinates.
+	
+	IF (bBuildPart == 1)
+		;G04 F30											; Wait for 30s if building
+		M110											; Turn-on laser.
+	ENDIF
+	
+	iCountLine = 1
+	bMovePositive = 0
+	WHILE (iCountLine <= iRHLinesRequired)			;Short Stripes
+		IF (bMovePositive == 0)
+			G01 X=-rRectWidth Y0 Z0 F=iFeedRate			; Linear interpolation.
+			bMovePositive = 1
+		ELSE
+			G01 X=rRectWidth Y0 Z0 F=iFeedRate			; Linear interpolation.
+			bMovePositive = 0
+		ENDIF
+		
+		; Move over to the next line, except if the current line is the last of the current layer.
+		IF (iCountLine < iRHLinesRequired)
+			G01 X0 Y=-rBeadWidth Z0 F=iFeedRate						; Move to the next line.
+		ENDIF
+		
+		iCountLine = iCountLine + 1									; Increment the line counter.
+	ENDWHILE
+	
+	IF (bBuildPart == 1)
+			M111													; Turn-off laser.
+	ENDIF
+	
+		
+	G01 Z=rLayerThickness F=iFeedRate				; Move up to the next layer.
+	
+	iCountLayer = iCountLayer + 1					; Increment the layer counter.
+ENDWHILE
+
+
+;------------------------------------------------------
+;
+; Common shutdown.
+;
+;------------------------------------------------------
+
+rXOffset = 0.0
+rYOffset = 0.0
+
+;
+; Turn-off the powder and gases.
+;
+IF (bBuildPart == 1)
+	M161								; Turn-off powder channel 1.
+	M181								; Turn-off central gas.
+	M183								; Turn-off secondary gas.
+ENDIF
+
+M02										; End of programme.

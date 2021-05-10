@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<opencv_storage>
+<opencv_ml_em>
+  <format>3</format>
+  <training_params>
+    <nclusters>2</nclusters>
+    <cov_mat_type>diagonal</cov_mat_type>
+    <epsilon>9.9999999999999995e-07</epsilon>
+    <iterations>100</iterations></training_params>
+  <weights type_id="opencv-matrix">
+    <rows>0</rows>
+    <cols>0</cols>
+    <dt>u</dt>
+    <data></data></weights>
+  <means type_id="opencv-matrix">
+    <rows>0</rows>
+    <cols>0</cols>
+    <dt>u</dt>
+    <data></data></means>
+  <covs>
+    </covs></opencv_ml_em>
+</opencv_storage>
