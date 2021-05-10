@@ -1,0 +1,7 @@
+Python Performance Statistics
+==============================
+
+Target FPS        1        2        4        8       16       32       64
+Est. FPS       0.93       1.92    3.85     7.58     14.45    26.86    64.00 
+Target Frames    60       120      240      480     960      1920      3840
+Actual Frames    57       116      232      457     869      1614      506

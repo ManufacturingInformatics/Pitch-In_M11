@@ -1,0 +1,3 @@
+Scale factor that causes min change in max vals 9.0
+Scale factor that causes min change in min vals 2.0
+Scale factor that causes min change in variance 9.0

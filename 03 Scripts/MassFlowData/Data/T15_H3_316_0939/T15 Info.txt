@@ -1,0 +1,22 @@
+Trial 15
+Hopper 3
+316 SS
+Batch 0939
+
+30 carrier gas
+20 stirrer speed
+
+Considering if increased variation observed at 6-12% turntable in Trial 14
+could be resonance associated with absolute  mass on the scales
+
+Turntable run at 4%, 10%, 16%, 10%, 4% for 5 minutes at each condition
+
+Showed increased and comparable variation at both occurrences of 10%
+1st occurrence had ~20g mass of powder in addition to mass of tub
+2nd occurrence had ~100g mass of powder in addition to mass of tub
+
+Turntable then run at 10% for two videos
+1st video shows LDC display on scales where 'pulsing' clearly identifiable
+2nd video shows powder on turntable, where the rotation appears to be smooth
+
+
