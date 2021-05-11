@@ -23,3 +23,4 @@
 03[[:space:]]Scripts/3D[[:space:]]Thermal[[:space:]]Reconstruction/Animations/surfacerecon-temperaturerotate-index-50-gif.gif filter=lfs diff=lfs merge=lfs -text
 03[[:space:]]Scripts/3D[[:space:]]Thermal[[:space:]]Reconstruction/Animations/waifu2x-flyingedge-surfacearea-ref15.gif filter=lfs diff=lfs merge=lfs -text
 03[[:space:]]Scripts/3D[[:space:]]Thermal[[:space:]]Reconstruction/Animations/imagestack-flyingedges-travel-z-reverse.gif filter=lfs diff=lfs merge=lfs -text
+03[[:space:]]Scripts/WavletAnalysis/arrowshape-imagedecomp-gif.gif filter=lfs diff=lfs merge=lfs -text
