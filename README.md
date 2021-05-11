@@ -24,6 +24,7 @@ All analyses are grouped into separate folders in [03 Scripts](03%Scripts) with 
 
 ## Contents
   - [01 Inputs](01%20Inputs)
+  - [03 Scripts](03%20Scripts)
   - [04 Data](04%20Data)
 
 ## Shortcuts
