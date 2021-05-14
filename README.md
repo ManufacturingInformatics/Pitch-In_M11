@@ -55,8 +55,6 @@ Custom GUI built for opening and inspecting HDF5 files.
 
 All data concerened with testing Waifu2x as a means of upscaling the recorded thermal footage.
 
-### Thermal Model
-
 ### Processing Thermal Footage
 
 Several types of thermal footage were recorded as part of this project. The goal was to analyse the heat distribution and pixel wise values to look for artifacts that would indicate the formation of a defect.
