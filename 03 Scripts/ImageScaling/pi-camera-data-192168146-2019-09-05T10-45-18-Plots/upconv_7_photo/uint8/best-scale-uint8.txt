@@ -1,0 +1,4 @@
+Scale factor that causes min change in max vals 2.0
+Scale factor that causes min change in min vals 2.0
+Scale factor that causes min change in variance 10.0
+Scale factor that causes the min change in temperature ranges 2.0

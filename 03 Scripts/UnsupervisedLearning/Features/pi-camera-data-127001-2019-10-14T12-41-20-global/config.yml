@@ -1,0 +1,38 @@
+balance: unique
+classif: RandForest
+classif_metric: f1
+computer:
+- Linux
+- acse12608
+- 4.4.0-18362-Microsoft
+- '#476-Microsoft Fri Nov 01 16:53:00 PST 2019'
+- x86_64
+cross_val: 0.1
+drop_labels: []
+estim_model: GMM
+features:
+  color_rgb:
+  - mean
+  - std
+  - energy
+gc_edge_type: features
+gc_regul: 3.0
+gc_use_trans: false
+img_type: 2d_rgb
+label_purity: 0.95
+name: langIsl
+nb_classes: 3
+nb_classif_search: 50
+nb_workers: 2
+path_config: /mnt/d/BEAM/Scripts/PowderSegmentation/pyImSegm-master/experiments_segmentation/thermal_config.yml
+path_exp: /mnt/d/BEAM/Scripts/PowderSegmentation/pyImSegm-master/results/pi-camera-data-127001-2019-10-14T12-41-20-global/experiment_segm-unSupervised_langIsl
+path_out: /mnt/d/BEAM/Scripts/PowderSegmentation/pyImSegm-master/results/pi-camera-data-127001-2019-10-14T12-41-20-global
+path_predict_imgs: /mnt/d/BEAM/Scripts/PackImagesToHDF5/pi-camera-data-127001-2019-10-14T12-41-20-global-unpack/png/*.png
+path_train_list: ''
+pca_coef: null
+run_LPO: true
+run_groupGMM: true
+slic_regul: 0.2
+slic_size: 4
+unique: false
+visual: true

@@ -1,0 +1,844 @@
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+;+                                                                               +
+;+ Programme pour la réalisation de plusieurs cordons avec differents paramètres +
+;+           10 duo de 2 lignes de 6 cordons soit 120 cordons différents         +
+;+             avec espace de découpe toutes les 4 lignes de cordons             +
+;+                     /!\  AVEC REPERE LOCAL  /!\                               +
+;+                                                                               +
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+;parametres laser
+;----------------
+MODE_LASER 1    		;1=asservi en vitesse
+PUIS_LASER 20  	;puissance laser en % (P= x% * N * 500) avec N le nombre de module actif
+VIT_TIR=2000    		;vitesse deplacement buse en mm/min
+COMMANDE_LASER  		;activation des commandes laser
+
+;SET G54 AS FRONT LEFT CORNER
+; USE MODULE 1
+
+;parametres poudre et gaz
+;------------------------
+;SELECTED HOPPER 1
+H21=3     ;Num du bol (H22=1 si bol2)
+H31=30    ;Debit du gaz porteur en % (H32 si bol2)
+H41=15    ;consigne du agitateur en % (H42 si bol2)
+H51=25    ;rotation du plateau en % (H52 si bol2),dépendant du racleur
+
+H61=3     ;debit du gaz central 1=1L/min
+H62=6     ;debit du gaz secondaire 1=1L/min
+
+;parametres pour les cordons
+;---------------------------
+;POWERS
+R1=18.3         ;var puissance laser 1 - 150
+R2=30.3         ;var puissance laser 2 - 280
+R3=45.7         ;var puissance laser 3 - 410
+R4=54.2         ;var puissance laser 4 - 540
+R5=66.1        ;var puissance laser 5 - 670
+R6=78.1         ;var puissance laser 6 - 800
+
+;VELOCITIES
+R11=500         ;var vitesse 1
+R12=1000       ;var vitesse 2
+R13=1500         ;var vitesse 3
+R14=2000       ;var vitesse 4
+R15=2500         ;var vitesse 5
+R16=3000      ;var vitesse 6
+
+;MASS FLOWS
+R21=10.0         ;var mass flow 1 - 3
+R22=12.4       ;var mass flow 2 - 9
+R23=20.3         ;var mass flow 3 - 15
+
+;BEAD DIMENSIONS
+R40=20        ;var longueur des cordons - LENGTH
+R41=5         ;var espace entre ligne de cordons - SPACING
+R42=8        ;espace decoupe
+STOPRE
+;programme
+;---------
+
+M180     ;activation gaz central
+M182     ;activation gaz secondaire
+
+G54                  ;appel decalage origine G54
+G90                  ;type de deplacement absolu
+G01 X0 Y0 F=VIT_TIR  ;deplacement à vitesse spécifié
+G01 Z0 F=VIT_TIR     ;deplacement à vitesse spécifié
+G91                  ;type de deplacement relatif
+
+;STOPRE ; execute les bloc d'avant - s'assure que la CN a le temps de prendre en compte les valeurs de R affectées précédemment avant le "lire" la suite
+
+;FIRST LINE
+
+H51=R21                   ;consigne du plateau en % (H42 si bol2)
+M160                 ;activation poudre
+G04 F20              ;temporisation
+
+VIT_TIR=R11
+STOPRE
+PUIS_LASER R1             ;puissance laser du 1er cordon
+COMMANDE_LASER
+
+G01 X=-R40 F=R11          ;printing bead
+                          ;arret laser
+
+PUIS_LASER R2
+COMMANDE_LASER
+
+G01 X=-R40 F=R11          ;printing bead
+
+
+PUIS_LASER R3
+COMMANDE_LASER
+
+G01 X=-R40 F=R11          ;printing bead
+
+
+PUIS_LASER R4
+COMMANDE_LASER
+
+G01 X=-R40 F=R11          ;printing bead
+
+
+PUIS_LASER R5
+COMMANDE_LASER
+
+G01 X=-R40 F=R11          ;printing bead
+
+
+PUIS_LASER R6
+COMMANDE_LASER
+
+G01 X=-R40 F=R11          ;printing bead
+
+
+y=-R41					;reset - move -ve y and back to original x
+x=6*R40
+
+;SECOND LINE (NEW SPEED)
+VIT_TIR=R12
+STOPRE
+PUIS_LASER R1             ;puissance laser du 1er cordon
+COMMANDE_LASER
+
+G01 X=-R40 F=R12          ;printing bead
+                      ;arret laser
+
+PUIS_LASER R2
+COMMANDE_LASER
+
+G01 X=-R40 F=R12          ;printing bead
+
+
+PUIS_LASER R3
+COMMANDE_LASER
+
+G01 X=-R40 F=R12          ;printing bead
+
+
+PUIS_LASER R4
+COMMANDE_LASER
+
+G01 X=-R40 F=R12          ;printing bead
+
+
+PUIS_LASER R5
+COMMANDE_LASER
+
+G01 X=-R40 F=R12          ;printing bead
+
+
+PUIS_LASER R6
+COMMANDE_LASER
+
+G01 X=-R40 F=R12          ;printing bead
+
+
+y=-R41					;reset - move -ve y and back to original x
+x=6*R40
+
+VIT_TIR=R13
+STOPRE
+PUIS_LASER R1             ;puissance laser du 1er cordon
+COMMANDE_LASER
+
+G01 X=-R40 F=R13          ;printing bead
+                          ;arret laser
+
+PUIS_LASER R2
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R13          ;printing bead
+M111
+
+PUIS_LASER R3
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R13          ;printing bead
+M111
+
+PUIS_LASER R4
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R13          ;printing bead
+M111
+
+PUIS_LASER R5
+COMMANDE_LASER
+
+G01 X=-R40 F=R13          ;printing bead
+
+
+PUIS_LASER R6
+COMMANDE_LASER
+
+G01 X=-R40 F=R13          ;printing bead
+
+
+y=-R41					;reset - move -ve y and back to original x
+x=6*R40
+
+VIT_TIR=R14
+STOPRE
+PUIS_LASER R1             ;puissance laser du 1er cordon
+COMMANDE_LASER
+
+G01 X=-R40 F=R14          ;printing bead
+                      ;arret laser
+
+PUIS_LASER R2
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R14          ;printing bead
+M111
+
+PUIS_LASER R3
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R14          ;printing bead
+M111
+
+PUIS_LASER R4
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R14          ;printing bead
+M111
+
+PUIS_LASER R5
+COMMANDE_LASER
+
+G01 X=-R40 F=R14          ;printing bead
+
+
+PUIS_LASER R6
+COMMANDE_LASER
+
+G01 X=-R40 F=R14          ;printing bead
+
+
+y=-R41					;reset - move -ve y and back to original x
+x=6*R40
+
+VIT_TIR=R15
+STOPRE
+PUIS_LASER R1             ;puissance laser du 1er cordon
+COMMANDE_LASER
+
+G01 X=-R40 F=R15          ;printing bead
+                      ;arret laser
+
+PUIS_LASER R2
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R15          ;printing bead
+M111
+
+PUIS_LASER R3
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R15          ;printing bead
+M111
+
+PUIS_LASER R4
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R15          ;printing bead
+M111
+
+PUIS_LASER R5
+COMMANDE_LASER
+
+G01 X=-R40 F=R15          ;printing bead
+
+
+PUIS_LASER R6
+COMMANDE_LASER
+
+G01 X=-R40 F=R15          ;printing bead
+
+
+y=-R41					;reset - move -ve y and back to original x
+x=6*R40
+
+VIT_TIR=R16
+STOPRE
+PUIS_LASER R1             ;puissance laser du 1er cordon
+COMMANDE_LASER
+
+G01 X=-R40 F=R16          ;printing bead
+                      ;arret laser
+
+PUIS_LASER R2
+COMMANDE_LASER
+
+G01 X=-R40 F=R16          ;printing bead
+
+
+PUIS_LASER R3
+COMMANDE_LASER
+
+G01 X=-R40 F=R16          ;printing bead
+
+
+PUIS_LASER R4
+COMMANDE_LASER
+
+G01 X=-R40 F=R16          ;printing bead
+
+
+PUIS_LASER R5
+COMMANDE_LASER
+
+G01 X=-R40 F=R16          ;printing bead
+
+
+PUIS_LASER R6
+COMMANDE_LASER
+
+G01 X=-R40 F=R16          ;printing bead
+
+
+M161		;Disable powder flow
+;END OF FIRST  BLOCK, LARGER Y GAP
+
+y=-R42					;reset - move -ve y and back to original x
+x=6*R40
+
+
+;SECOND BLOCK
+
+H51=R22                   ;consigne du plateau en % (H42 si bol2)
+M160                 ;activation poudre
+G04 F20              ;temporisation
+
+VIT_TIR=R11
+STOPRE
+PUIS_LASER R1             ;puissance laser du 1er cordon
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R11          ;printing bead
+M111                      ;arret laser
+
+PUIS_LASER R2
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R11          ;printing bead
+M111
+
+PUIS_LASER R3
+COMMANDE_LASER
+
+G01 X=-R40 F=R11          ;printing bead
+
+
+PUIS_LASER R4
+COMMANDE_LASER
+
+G01 X=-R40 F=R11          ;printing bead
+
+
+PUIS_LASER R5
+COMMANDE_LASER
+
+G01 X=-R40 F=R11          ;printing bead
+
+
+PUIS_LASER R6
+COMMANDE_LASER
+
+G01 X=-R40 F=R11          ;printing bead
+
+
+y=-R41					;reset - move -ve y and back to original x
+x=6*R40
+
+;SECOND LINE (NEW SPEED)
+
+VIT_TIR=R12
+STOPRE
+PUIS_LASER R1             ;puissance laser du 1er cordon
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R12          ;printing bead
+M111                      ;arret laser
+
+PUIS_LASER R2
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R12          ;printing bead
+M111
+
+PUIS_LASER R3
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R12          ;printing bead
+M111
+
+PUIS_LASER R4
+COMMANDE_LASER
+
+G01 X=-R40 F=R12          ;printing bead
+
+
+PUIS_LASER R5
+COMMANDE_LASER
+
+G01 X=-R40 F=R12          ;printing bead
+
+
+PUIS_LASER R6
+COMMANDE_LASER
+
+G01 X=-R40 F=R12          ;printing bead
+
+
+y=-R41					;reset - move -ve y and back to original x
+x=6*R40
+
+VIT_TIR=R13
+STOPRE
+PUIS_LASER R1             ;puissance laser du 1er cordon
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R13          ;printing bead
+M111                      ;arret laser
+
+PUIS_LASER R2
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R13          ;printing bead
+M111
+
+PUIS_LASER R3
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R13          ;printing bead
+M111
+
+PUIS_LASER R4
+COMMANDE_LASER
+
+G01 X=-R40 F=R13          ;printing bead
+
+
+PUIS_LASER R5
+COMMANDE_LASER
+
+G01 X=-R40 F=R13          ;printing bead
+
+
+PUIS_LASER R6
+COMMANDE_LASER
+
+G01 X=-R40 F=R13          ;printing bead
+
+
+y=-R41					;reset - move -ve y and back to original x
+x=6*R40
+
+VIT_TIR=R14
+STOPRE
+PUIS_LASER R1             ;puissance laser du 1er cordon
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R14          ;printing bead
+M111                      ;arret laser
+
+PUIS_LASER R2
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R14          ;printing bead
+M111
+
+PUIS_LASER R3
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R14          ;printing bead
+M111
+
+PUIS_LASER R4
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R14          ;printing bead
+M111
+
+PUIS_LASER R5
+COMMANDE_LASER
+
+G01 X=-R40 F=R14          ;printing bead
+
+
+PUIS_LASER R6
+COMMANDE_LASER
+
+G01 X=-R40 F=R14          ;printing bead
+
+
+y=-R41					;reset - move -ve y and back to original x
+x=6*R40
+
+VIT_TIR=R15
+STOPRE
+PUIS_LASER R1             ;puissance laser du 1er cordon
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R15          ;printing bead
+M111                      ;arret laser
+
+PUIS_LASER R2
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R15          ;printing bead
+M111
+
+PUIS_LASER R3
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R15          ;printing bead
+M111
+
+PUIS_LASER R4
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R15          ;printing bead
+M111
+
+PUIS_LASER R5
+COMMANDE_LASER
+
+G01 X=-R40 F=R15          ;printing bead
+
+
+PUIS_LASER R6
+COMMANDE_LASER
+
+G01 X=-R40 F=R15          ;printing bead
+
+
+y=-R41					;reset - move -ve y and back to original x
+x=6*R40
+
+VIT_TIR=R16
+STOPRE
+PUIS_LASER R1             ;puissance laser du 1er cordon
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R16          ;printing bead
+M111                      ;arret laser
+
+PUIS_LASER R2
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R16          ;printing bead
+M111
+
+PUIS_LASER R3
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R16          ;printing bead
+M111
+
+PUIS_LASER R4
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R16          ;printing bead
+M111
+
+PUIS_LASER R5
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R16          ;printing bead
+M111
+
+PUIS_LASER R6
+COMMANDE_LASER
+
+G01 X=-R40 F=R16          ;printing bead
+
+
+M161
+;END OF SECOND BLOCK, LARGER Y GAP
+
+y=-R42					;reset - move -ve y and back to original x
+x=6*R40
+
+
+;THIRD BLOCK
+
+VIT_TIR=R11
+STOPRE
+H51=R23                   ;consigne du plateau en % (H42 si bol2)
+M160                 ;activation poudre
+G04 F20              ;temporisation
+
+PUIS_LASER R1             ;puissance laser du 1er cordon
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R11          ;printing bead
+M111                      ;arret laser
+
+PUIS_LASER R2
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R11          ;printing bead
+M111
+
+PUIS_LASER R3
+COMMANDE_LASER
+
+G01 X=-R40 F=R11          ;printing bead
+
+
+PUIS_LASER R4
+COMMANDE_LASER
+
+G01 X=-R40 F=R11          ;printing bead
+
+
+PUIS_LASER R5
+COMMANDE_LASER
+
+G01 X=-R40 F=R11          ;printing bead
+
+
+PUIS_LASER R6
+COMMANDE_LASER
+
+G01 X=-R40 F=R11          ;printing bead
+
+
+y=-R41					;reset - move -ve y and back to original x
+x=6*R40
+
+;SECOND LINE (NEW SPEED)
+VIT_TIR=R12
+STOPRE
+PUIS_LASER R1             ;puissance laser du 1er cordon
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R12          ;printing bead
+M111                      ;arret laser
+
+PUIS_LASER R2
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R12          ;printing bead
+M111
+
+PUIS_LASER R3
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R12          ;printing bead
+M111
+
+PUIS_LASER R4
+COMMANDE_LASER
+
+G01 X=-R40 F=R12          ;printing bead
+
+
+PUIS_LASER R5
+COMMANDE_LASER
+
+G01 X=-R40 F=R12          ;printing bead
+
+
+PUIS_LASER R6
+COMMANDE_LASER
+
+G01 X=-R40 F=R12          ;printing bead
+
+
+y=-R41					;reset - move -ve y and back to original x
+x=6*R40
+
+VIT_TIR=R13
+STOPRE
+PUIS_LASER R1             ;puissance laser du 1er cordon
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R13          ;printing bead
+M111                      ;arret laser
+
+PUIS_LASER R2
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R13          ;printing bead
+M111
+
+PUIS_LASER R3
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R13          ;printing bead
+M111
+
+PUIS_LASER R4
+COMMANDE_LASER
+
+G01 X=-R40 F=R13          ;printing bead
+
+
+PUIS_LASER R5
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R13          ;printing bead
+M111
+
+PUIS_LASER R6
+COMMANDE_LASER
+
+G01 X=-R40 F=R13          ;printing bead
+
+
+y=-R41					;reset - move -ve y and back to original x
+x=6*R40
+
+VIT_TIR=R14
+STOPRE
+PUIS_LASER R1             ;puissance laser du 1er cordon
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R14          ;printing bead
+M111                      ;arret laser
+
+PUIS_LASER R2
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R14          ;printing bead
+M111
+
+PUIS_LASER R3
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R14          ;printing bead
+M111
+
+PUIS_LASER R4
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R14          ;printing bead
+M111
+
+PUIS_LASER R5
+COMMANDE_LASER
+
+G01 X=-R40 F=R14          ;printing bead
+
+
+PUIS_LASER R6
+COMMANDE_LASER
+
+G01 X=-R40 F=R14          ;printing bead
+
+
+y=-R41					;reset - move -ve y and back to original x
+x=6*R40
+
+VIT_TIR=R15
+STOPRE
+PUIS_LASER R1             ;puissance laser du 1er cordon
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R15          ;printing bead
+M111                      ;arret laser
+
+PUIS_LASER R2
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R15          ;printing bead
+M111
+
+PUIS_LASER R3
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R15          ;printing bead
+M111
+
+PUIS_LASER R4
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R15          ;printing bead
+M111
+
+PUIS_LASER R5
+COMMANDE_LASER
+
+G01 X=-R40 F=R15          ;printing bead
+
+
+PUIS_LASER R6
+COMMANDE_LASER
+
+G01 X=-R40 F=R15          ;printing bead
+
+
+y=-R41					;reset - move -ve y and back to original x
+x=6*R40
+
+VIT_TIR=R16
+STOPRE
+PUIS_LASER R1             ;puissance laser du 1er cordon
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R16          ;printing bead
+M111                      ;arret laser
+
+PUIS_LASER R2
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R16          ;printing bead
+M111
+
+PUIS_LASER R3
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R16          ;printing bead
+M111
+
+PUIS_LASER R4
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R16          ;printing bead
+M111
+
+PUIS_LASER R5
+COMMANDE_LASER
+M110
+G01 X=-R40 F=R16          ;printing bead
+M111
+
+PUIS_LASER R6
+COMMANDE_LASER
+
+G01 X=-R40 F=R16          ;printing bead
+
+
+M161
+;END OF THIRD BLOCK
+
+; TURN EVERYTHING OFF
+M181
+M183
+M02

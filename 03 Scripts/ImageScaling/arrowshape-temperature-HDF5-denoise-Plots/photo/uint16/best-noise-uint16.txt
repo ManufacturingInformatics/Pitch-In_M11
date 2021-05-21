@@ -1,0 +1,4 @@
+Denoise factor that causes min change in max vals 1.0
+Denoise factor that causes min change in min vals 0.0
+Denoise factor that causes min change in variance 3.0
+Denoise factor that causes the min change in temperature ranges 0.0
