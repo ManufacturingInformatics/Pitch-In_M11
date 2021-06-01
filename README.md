@@ -27,6 +27,14 @@ All analyses are grouped into separate folders in [03 Scripts](03%Scripts) with 
   - [03 Scripts](03%20Scripts)
   - [04 Data](04%20Data)
 
+## Report
+
+A final report on the research outcomes of this project can also be found in a project report found [here](01%20Input/from%20UoS/Reports/Pitch-In%20M11%20Final%20Report%20-%20Business%20Case%20and%20Iot%20Implementation.docx). It outlines some of the challenges faced with undertaking this research, the solutions developed and costs associated with attempting to integrate IoT devices into legacy laser-based additive manufacturing systems.
+
+## Dataset
+
+The key data collected during the project has been moved [here](https://www.kaggle.com/dbmiller/pitchin-lbam-thermal-imaging-dataset).
+
 ## Shortcuts
 
 The following are shortcut links to key folders.
